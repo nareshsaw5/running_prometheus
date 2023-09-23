@@ -1,0 +1,32 @@
+version: "3"
+services:
+  prometheus-server:
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ~/learning/prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ~/learning/prometheus/prometheus-data:/prometheus
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    ports:
+      - 8080:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    depends_on:
+      - redis
+      - springboot
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - 6379:6379
+  springboot:
+    image: nareshsaw5/springboot
+    container_name: springboot
+    ports:
+      - 8585:8585
